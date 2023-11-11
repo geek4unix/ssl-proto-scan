@@ -15,9 +15,11 @@ Enter a host and port number and timeout as arguments e.g. $GREEN $0 $(hostname 
 
 Current PROTOS: $PROTOS
 
-Edit the \$protos variable in $0, and set one of :
+Edit the \$protos variable in $0:
 
 $(grep -n "$PROTOS" $0)
+
+and set them to any combination of:
 
 $TLS_OPTIONS"
 
