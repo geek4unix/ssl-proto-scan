@@ -13,10 +13,11 @@ TLS_OPTIONS=$(2>&1 openssl s_client --help | egrep -i 'tls[0-9]|ssl.*[0-9]'|sed 
 USAGE="
 Enter a host and port number and timeout as arguments e.g. $GREEN $0 $(hostname -f) 443 5$RESET
 
-Currently PROTOS: $PROTOS
-
+Current PROTOS: $PROTOS
 
 Edit the \$protos variable in $0, and set one of :
+
+$(grep -n "$PROTOS" $0)
 
 $TLS_OPTIONS"
 
