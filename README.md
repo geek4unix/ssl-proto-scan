@@ -8,8 +8,9 @@ It requires OpenSSL and coreutils packages to be installed. ( OpenSSL for openss
 
 Usage:
 
-![Screenshot 2023-11-11 at 14 06 20](https://github.com/geek4unix/ssl-proto-scan/assets/6726149/458fb0cc-fc8e-4f4d-9950-be137119bbd6)
+![Screenshot 2023-11-12 at 08 59 50](https://github.com/geek4unix/ssl-proto-scan/assets/6726149/b3fa44f4-679f-4b1c-80d3-111116b70f46)
 
 Examples:
 
-![Screenshot 2023-11-11 at 14 13 56](https://github.com/geek4unix/ssl-proto-scan/assets/6726149/59494d5f-58ff-49f8-9003-36698ae3c200)
+![Screenshot 2023-11-12 at 09 26 14](https://github.com/geek4unix/ssl-proto-scan/assets/6726149/c546e2b8-25f9-4d09-bec0-74199b7ba80f)
+![Screenshot 2023-11-12 at 09 26 37](https://github.com/geek4unix/ssl-proto-scan/assets/6726149/5e9a911b-a15b-4675-8518-6ebd135eef72)
