@@ -12,4 +12,4 @@ Usage:
 
 Examples:
 
-![Screenshot 2023-11-12 at 14 35 39](https://github.com/geek4unix/ssl-proto-scan/assets/6726149/564ceecc-de6a-4fc4-bb24-6fd60373b4cd)
+![Screenshot 2023-11-12 at 14 39 11](https://github.com/geek4unix/ssl-proto-scan/assets/6726149/4983064e-9f76-4a46-a50b-916622867340)
