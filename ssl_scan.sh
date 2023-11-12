@@ -48,31 +48,41 @@ for proto in $PROTOS
 do
   OUTPUT=$(2>&1 echo "Hello World" | timeout $3 2>&1 2>&1 openssl s_client -connect $1:$2 -$proto)
   RET=$?
+  RET_COLOUR=""
+  if [[ $RET -eq 0 ]]; then
+    RET_COLOUR=$GREEN
+  elif [[ $RET -eq 1 ]]; then
+    RET_COLOUR=$RED
+  else
+    RET_COLOUR=$YELLOW
+  fi
   SERVICE=$(grep ".* $2\/[tu]dp" /etc/services |awk {'print $1'})
 
   # must have cert data or a non NONE Cipher
   CC=$(echo -n $OUTPUT|grep "Server certificate" | wc -l)
   WV=$(echo -n $OUTPUT|grep "SSL.*wrong version number" | wc -l)
-  SS=$(echo -n $OUTPUT|egrep -B2 "SSL-Session.*:|self-signed certificate"|tr -s " "|tr -d ':'|egrep -v "New, (NONE), Cipher is (NONE)"|grep -v "Cipher.*0000"|wc -l)
+  SS=$(echo -n $OUTPUT|egrep -iB2 "SSL-Session.*:|self signed certificate|self-signed certificate"|tr -s " "|tr -d ':'|egrep -v "New, (NONE), Cipher is (NONE)"|grep -v "Cipher.*0000"|wc -l)
   PU=$(echo -n $OUTPUT|egrep "Protocol.*:|Cipher.*"|grep -v New.*NONE)
   PUL=$(echo -n $OUTPUT|egrep "Protocol.*:|Cipher.*"|grep -v New.*NONE|wc -l)
   if [ $DEBUG -ne 0 ]; then
-    echo "WV =$WV"
-    echo "SS =$SS"
+    echo "Certificate Found =$CC"
+    echo "Wrong Version count =$WV"
+    echo "SSL Session =$SS"
     echo "PROTO USED =$PU"
     echo "-----
 OUTPUT=$OUTPUT
 -----"
   fi
+
+  MSG_COMMON="on port $YELLOW$2$RESET using $YELLOW$proto$RESET, service: $YELLOW$SERVICE$RESET - return code: $RET_COLOUR$RET$RESET"
   if ([[ $CC -gt 0 ]] || [[ $SS -gt 0 ]]) && ( [[ $WV -lt 1 ]] ) ; then
     let sc=$sc+1
-    echo $GREEN"Successfully$RESET connected to $1 on port $2 using $YELLOW$proto$RESET, service: $YELLOW$SERVICE$RESET - return code: $RET"
+    echo $GREEN"Successfully$RESET connected to $1 $MSG_COMMON"
   else
     let fc=$fc+1
-    echo $RED"Failed$RESET to connect $1 on port $2 using $YELLOW$proto$RESET, service: $YELLOW$SERVICE$RESET - return code: $RET"
+    echo $RED"Failed$RESET to connect $1 $MSG_COMMON"
   fi
   sleep 1
 done
-
 echo "$RED$fc$RESET failed connections"
 echo "$GREEN$sc$RESET successful connections"
