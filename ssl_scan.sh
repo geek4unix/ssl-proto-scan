@@ -50,15 +50,18 @@ do
   OUTPUT=$(2>&1 timeout $3 2>&1 2>&1 openssl s_client -connect $1:$2 -$proto)
   RET=$?
 
-  # must have cert data ! Make sure there is a Cipher
+  # must have cert data or a non NONE Cipher
   CC=$(echo -n $OUTPUT|grep "Server certificate" | wc -l)
-  PU=$(echo -n $OUTPUT|grep "Protocol.*:")
-  PUL=$(echo -n $OUTPUT|grep "Protocol.*:"|wc -l)
+  PU=$(echo -n $OUTPUT|egrep "Protocol.*:|Cipher.*"|grep -v NONE)
+  PUL=$(echo -n $OUTPUT|egrep "Protocol.*:|Cipher.*"|grep -v NONE|wc -l)
   if [ $DEBUG -ne 0 ]; then
-    echo "OUTPUT=$OUTPUT"
     echo "PROTO USED =$PU"
+    echo "-----
+OUTPUT=$OUTPUT
+-----"
   fi
-  if [ $PUL -gt 0 ]  ; then
+  if [[ $PUL -gt 0 ]] ||  [[ $CC -gt 0 ]] ; then
+
     let sc=$sc+1
     echo $GREEN"Successfully$RESET connected to $1 on port $2 using $YELLOW$proto$RESET, return code: $RET"
   else
