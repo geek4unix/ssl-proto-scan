@@ -43,10 +43,18 @@ if [[ -z $1 ]] || [[ -z $2 ]] || [[ -z $3 ]]; then
 fi
 
 sc=0; fc=0
+SERVICE=$(grep " $2\/" /etc/services | tr -s ' '|awk {'print $1'}|tail -1)
 
 for proto in $PROTOS
 do
-  OUTPUT=$(2>&1 echo "Hello World" | timeout $3 2>&1 2>&1 openssl s_client -connect $1:$2 -$proto)
+  if [[ $SERVICE == "submission" ]]; then 
+    STARTTLS=" -starttls smtp"
+  elif [[ $SERVICE == "urd" ]] ; then
+    STARTTLS=" -starttls smtp"
+  else
+    STARTTLS=""; 
+  fi
+  OUTPUT=$(2>&1 echo "Hello World" | timeout $3 2>&1 2>&1 openssl s_client $STARTTLS -connect $1:$2 -$proto)
   RET=$?
   RET_COLOUR=""
   if [[ $RET -eq 0 ]]; then
@@ -56,7 +64,6 @@ do
   else
     RET_COLOUR=$YELLOW
   fi
-  SERVICE=$(grep ".* $2\/[tu]dp" /etc/services |awk {'print $1'})
 
   # must have cert data or a non NONE Cipher
   CC=$(echo -n $OUTPUT|grep "Server certificate" | wc -l)
